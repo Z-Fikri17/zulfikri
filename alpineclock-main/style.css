@@ -1,0 +1,132 @@
+body {
+  font-family: sans-serif;
+  background: #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.clock {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  border: 6px solid #ccc;
+  box-shadow: inset 0 0 10px #0005, 0 0 10px #aaa;
+  background: black;
+}
+
+.hand {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  transform-origin: bottom;
+  transform: rotate(0deg);
+  border-radius: 6px;
+}
+
+.hour {
+  width: 6px;
+  height: 60px;
+  background: white;
+}
+
+.minute {
+  width: 4px;
+  height: 90px;
+  background: white;
+}
+
+.second {
+  width: 2px;
+  height: 100px;
+  background: red;
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  transform-origin: bottom;
+}
+
+
+.center {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: white;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.number {
+  position: absolute;
+  left: 48%;
+  top: 47%;
+  font-weight: bold;
+  font-size: 18px;
+  color: white;
+  transform-origin: center;
+  transform: translate(-50%, -50%);
+}
+
+/* Tick marks */
+.tick {
+  position: absolute;
+  width: 2px;
+  height: 10px;
+  background: white;
+  left: 50%;
+  top: 48%;
+  transform-origin: center;
+}
+
+
+.weather-box {
+  text-align: left;
+  font-size: 18px;
+}
+
+.weather-title {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.digital-time {
+  font-size: 36px;
+  font-family: monospace;
+  margin-bottom: 20px;
+}
+
+.timezone-selector {
+  margin-bottom: 20px;
+}
+
+.news-item {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  margin-bottom: 15px;
+}
+
+.news-item:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.news-item a {
+  text-decoration: none;
+  color: #1a73e8;
+  font-weight: 500;
+}
+
+.news-item a:hover {
+  text-decoration: underline;
+}
+
+

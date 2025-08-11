@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    {
+      "source": "/alpineclock-main",
+      "destination": "/alpineclock-main/index.html"
+    },
+    {
+      "source": "/GunGame",
+      "destination": "/GunGame/public/index.html"
+    }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
+}

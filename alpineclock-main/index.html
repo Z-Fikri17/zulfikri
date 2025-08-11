@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Clock Sync</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+
+<body x-data="clockApp" x-init="init()" style="text-align: center; font-family: sans-serif;">
+
+  <h1>Analog + Digital Clock with Timezone</h1>
+
+  <!-- CLOCK + WEATHER SIDE BY SIDE -->
+  <div style="display: flex; justify-content: center; align-items: flex-start; gap: 50px;">
+
+    <!-- LEFT: CLOCK + DIGITAL CLOCK + TIMEZONE -->
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      
+      <!-- CLOCK -->
+      <div class="clock" style="position: relative;">
+        <template x-for="n in 60">
+          <div
+            class="tick"
+            :class="{'tick-large': n % 5 === 0}"
+            :style="`transform: rotate(${n * 6}deg) translateY(-145px);`"
+          ></div>
+        </template>
+
+        <template x-for="n in 12">
+          <div
+            class="number"
+            :style="`transform: rotate(${n * 30}deg) translateY(-120px) rotate(-${n * 30}deg);`"
+          >
+            <span x-text="n"></span>
+          </div>
+        </template>
+
+        <div class="hand hour" :style="hourStyle"></div>
+        <div class="hand minute" :style="minuteStyle"></div>
+        <div class="hand second" :style="secondStyle"></div>
+        <div class="center"></div>
+      </div>
+
+      <div x-text="digitalTime" style="font-size: 36px; font-family: monospace; margin-top: 20px;"></div>
+
+      <div style="margin-top: 20px;">
+        <label for="timezone">Timezone:</label>
+        <select id="timezone" x-model="timezone">        
+          <option value="8">Malaysia (UTC+8)</option>
+          <option value="0">UTC</option>       
+          <option value="-5">New York (UTC-5)</option>
+          <option value="1">Berlin (UTC+1)</option>
+          <option value="9">Tokyo (UTC+9)</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: WEATHER INFO -->
+    <div style="text-align: left; margin-top: 100px;">
+      <h2>Weather in Kuala Lumpur</h2>
+      <div>Temperature: <span x-text="weather.temp"></span></div>
+      <div>Condition: <span x-text="weather.condition"></span></div>
+    </div>
+
+  </div>
+
+  <!-- News Section -->
+<!-- News Section -->
+<div x-data="newsApp" x-init="fetchNews()" class="p-6 bg-gray-50 rounded-lg shadow-md max-w-3xl mx-auto">
+  <h2 class="text-2xl font-bold mb-4 text-gray-800">📰 Latest News</h2>
+
+  <template x-for="article in articles" :key="article.title">
+    <div class="news-item bg-white rounded-lg shadow-sm flex items-start gap-4 p-4 mb-4 hover:shadow-md transition">
+      <img :src="article.thumbnail" alt="News Image"
+           class="w-24 h-24 object-cover rounded-md border" />
+
+      <div class="flex-1">
+        <a :href="article.link" target="_blank" class="text-lg font-semibold text-blue-700 hover:underline">
+          <p x-text="article.title"></p>
+        </a>
+        <p class="text-sm text-gray-500" x-text="formatDate(article.pubDate)"></p>
+      </div>
+    </div>
+  </template>
+</div>
+<script>
+  document.addEventListener('alpine:init', () => {
+    // Clock + Weather App
+    Alpine.data('clockApp', () => ({
+      timezone: "8",
+      hourStyle: '',
+      minuteStyle: '',
+      secondStyle: '',
+      digitalTime: '',
+      weather: { temp: 'Loading...', condition: 'Loading...' },
+
+      init() {
+        this.updateClock();
+        this.fetchWeather();
+        setInterval(() => this.updateClock(), 1000);
+        setInterval(() => this.fetchWeather(), 300000);
+        this.$watch('timezone', () => this.updateClock());
+      },
+
+      updateClock() {
+        const now = new Date();
+        const offset = parseInt(this.timezone);
+        const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+        const adjusted = new Date(utc + offset * 3600000);
+
+        const hours = adjusted.getHours();
+        const minutes = adjusted.getMinutes();
+        const seconds = adjusted.getSeconds();
+
+        const pad = n => n.toString().padStart(2, '0');
+        this.digitalTime = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+
+        this.hourStyle = `transform: rotate(${((hours % 12) + minutes / 60) * 30}deg);`;
+        this.minuteStyle = `transform: rotate(${minutes * 6}deg);`;
+        this.secondStyle = `transform: rotate(${seconds * 6}deg);`;
+      },
+
+      fetchWeather() {
+        fetch('https://z-fikri17.github.io/alpineclock/weather.json')
+          .then(res => res.json())
+          .then(data => {
+            this.weather.temp = data.current.temp_c + "°C";
+            this.weather.condition = data.current.condition.text;
+          })
+          .catch(err => {
+            console.error("Weather fetch failed:", err);
+            this.weather.temp = "N/A";
+            this.weather.condition = "Unavailable";
+          });
+      }
+    }));
+
+    // News App
+    Alpine.data('newsApp', () => ({
+      articles: [],
+      async fetchNews() {
+        try {
+          const res = await fetch("https://api.rss2json.com/v1/api.json?rss_url=https://feeds.bbci.co.uk/news/rss.xml");
+          const data = await res.json();
+          this.articles = data.items || [];
+        } catch (err) {
+          console.error("RSS News fetch failed:", err);
+        }
+      },
+      formatDate(dateStr) {
+        const date = new Date(dateStr);
+        return date.toLocaleString();
+      }
+    }));
+  });
+</script>
+
+
+
+  
+</body>
+</html>
