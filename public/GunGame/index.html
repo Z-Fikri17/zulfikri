@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D FPS Game</title>
+    <link rel="stylesheet" href="/GunGame/style.css">
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+        <div id="crosshair"></div>
+        <div id="ui">
+            <div id="health">Health: <span id="healthValue">100</span></div>
+            <div id="ammo">Ammo: <span id="ammoValue">30</span></div>
+            <div id="score">Score: <span id="scoreValue">0</span></div>
+        </div>
+        <div id="instructions">
+            <h3>Controls:</h3>
+            <p>WASD - Move</p>
+            <p>Mouse - Look around</p>
+            <p>Click - Shoot</p>
+            <p>R - Reload</p>
+            <p>Click to start!</p>
+        </div>
+    </div>
+    <script src="/GunGame/game.js"></script>
+</body>
+</html>
